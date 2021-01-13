@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  renameme-service:
+    container_name: renameme
+    image: renameme
+    build: ./
+    ports:
+      - 8080:8080
+    networks:
+      - renameme-network
+    links:
+      - postgresql-service
+    depends_on:
+      - postgresql-service
+
+  postgresql-service:
+    container_name: postgresql-database
+    image: postgres
+    networks:
+      - renameme-network
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=renameme
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+
+networks:
+  renameme-network:
+    driver: bridge
