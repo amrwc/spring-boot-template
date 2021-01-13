@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RenamemeApplicationTest {
+class ApplicationTest {
 
     @Test
     @DisplayName("Should have returned the welcome message")
     void shouldHaveWelcomed() {
-        assertThat(RenamemeApplication.getWelcomeMessage()).isEqualTo("Read the readme to get started");
+        assertThat(Application.getWelcomeMessage()).isEqualTo("Welcome! Read the readme to get started.");
     }
 }
