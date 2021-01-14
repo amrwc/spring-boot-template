@@ -15,13 +15,21 @@ This template has been bootstrapped using
 
 Rename the group and package name.
 
+<details>
+
+<summary>
+Click here to expand
+</summary>
+
 1.  Directory structure:
     - `src/main/java/me/rename/renameme`
     - `src/test/java/me/rename/renameme`
 1.  `src/main/resources/application.properties`:
     - `spring.datasource.url=jdbc:postgresql://postgresql-database:5432/renameme`
-    - `logging.level.me.rename=DEBUG`
-    - `logging.file.name=${logging.file.path}/renameme.log`
+1.  `src/main/resourcees/log4j2.xml`:
+    - `fileName="log/renameme.log"`
+    - `filePattern="log/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
+    - `<IfFileName glob="log/renameme-*.log.gz"/>`
 1.  `build.gradle`:
     - `group: 'me.rename'`
 1.  `docker-compose.yml`:
@@ -33,6 +41,8 @@ Rename the group and package name.
     - `renameme-network`
 1.  `settings.gradle`:
     - `rootProject.name = 'renameme'`
+
+</details>
 
 ## Setup
 
