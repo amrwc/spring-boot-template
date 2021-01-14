@@ -46,8 +46,11 @@ Click here to expand
 
 ## Setup
 
-```
-./gradlew build && docker-compose up --build
+```console
+./gradlew build && docker-compose -f .docker/docker-compose.yml up --build
+
+# Or
+./gradlew build && cd .docker && docker-compose up --build
 ```
 
 The migrations from `src/main/resources/db/changelog` are applied
