@@ -4,7 +4,9 @@ services:
   renameme-service:
     container_name: renameme
     image: renameme
-    build: ./
+    build:
+      context: ../
+      dockerfile: .docker/Dockerfile
     ports:
       - 8080:8080
     networks:
