@@ -10,6 +10,6 @@ class ApplicationTest {
     @Test
     @DisplayName("Should have returned the welcome message")
     void shouldHaveWelcomed() {
-        assertThat(Application.getWelcomeMessage()).isEqualTo("Welcome! Read the readme to get started.");
+        assertThat(Application.getWelcomeMessage()).isEqualTo(Application.WELCOME_MESSAGE);
     }
 }
