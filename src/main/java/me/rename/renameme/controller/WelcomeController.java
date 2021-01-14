@@ -2,8 +2,8 @@ package me.rename.renameme.controller;
 
 import lombok.extern.log4j.Log4j2;
 import me.rename.renameme.model.WelcomeMessage;
-import me.rename.renameme.repository.WelcomeMessageRepository;
 import me.rename.renameme.request.WelcomeMessageRequest;
+import me.rename.renameme.service.WelcomeMessageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +15,13 @@ import java.util.Optional;
  */
 @Log4j2
 @RestController
+@RequestMapping("/api/welcome")
 public class WelcomeController {
 
-    private final WelcomeMessageRepository repository;
+    private final WelcomeMessageService service;
 
-    public WelcomeController(final WelcomeMessageRepository repository) {
-        this.repository = repository;
+    public WelcomeController(final WelcomeMessageService service) {
+        this.service = service;
     }
 
     /**
@@ -28,10 +29,10 @@ public class WelcomeController {
      * @param id optional ID
      * @return welcome message with the given ID
      */
-    @RequestMapping(path = "/api/welcome/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = "{id}", method = RequestMethod.GET)
     public ResponseEntity<WelcomeMessage> welcome(@PathVariable Optional<Long> id) {
         log.info("Fetching the first welcome message");
-        return repository.findById(id.orElse(1L))
+        return service.findWelcomeMessageById(id.orElse(1L))
                 .map(welcomeMessage -> new ResponseEntity<>(welcomeMessage, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -41,11 +42,10 @@ public class WelcomeController {
      * @param request welcome message to persist
      * @return HTTP status
      */
-    @RequestMapping(path = "/api/welcome", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<HttpStatus> addWelcome(@RequestBody WelcomeMessageRequest request) {
-        log.info("Persisting the given welcome message");
-        return Optional.of(repository.save(new WelcomeMessage(request.getContent())))
-                .map(ignored -> new ResponseEntity<HttpStatus>(HttpStatus.CREATED))
-                .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+        log.info("Creating a welcome message: {}", request);
+        service.createWelcomeMessage(request.getContent());
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
