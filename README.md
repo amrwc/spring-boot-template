@@ -50,7 +50,8 @@ Click here to expand
 ./gradlew build && docker-compose up --build
 ```
 
-The migrations from `src/main/resources` are applied automatically.
+The migrations from `src/main/resources/db/changelog` are applied
+automatically.
 
 The application is now listening at `http://localhost:8080`. Visit
 `/api/welcome` to see the welcome message.
