@@ -56,7 +56,37 @@ Click here to expand
 The migrations from `src/main/resources/db/changelog` are applied
 automatically.
 
-The application is now listening at `http://localhost:8080`. Visit
-`/api/welcome` to see the welcome message.
+The application is now listening at `http://localhost:8080`.
+
+## API
+
+### GET `/api/welcome[/<id>]`
+
+Returns a welcome message with the given ID.
+
+- `id` – primary key of the `WELCOME_MESSAGES` table. Default: `1`
+
+#### Example
+
+```console
+# {"id":2,"content":"Foo"}
+curl http://localhost:8080/api/welcome/2
+```
+
+### POST `/api/welcome`
+
+Stores a new welcome message in the database.
+
+- `content` – welcome message content.
+
+#### Example
+
+```console
+curl \
+    --request POST \
+    --header 'Content-Type: application/json' \
+    --data '{"content": "Bar"}' \
+    http://localhost:8080/api/welcome
+```
 
 [1]: https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.1.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql
