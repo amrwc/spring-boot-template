@@ -30,6 +30,10 @@ Click here to expand
     - `fileName="log/renameme.log"`
     - `filePattern="log/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
     - `<IfFileName glob="log/renameme-*.log.gz"/>`
+1.  `src/test/resourcees/log4j2.xml`:
+    - `fileName="log/test/renameme.log"`
+    - `filePattern="log/test/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
+    - `<IfFileName glob="log/test/renameme-*.log.gz"/>`
 1.  `build.gradle`:
     - `group: 'me.rename'`
 1.  `docker-compose.yml`:
@@ -60,26 +64,32 @@ The application is now listening at `http://localhost:8080`.
 
 ## API
 
-### GET `/api/welcome[/<id>]`
+### `/api/welcome`
+
+#### GET `[/<id>]`
 
 Returns a welcome message with the given ID.
 
+Path variables:
+
 - `id` – primary key of the `WELCOME_MESSAGES` table. Default: `1`
 
-#### Example
+##### Example
 
 ```console
 # {"id":2,"content":"Foo"}
 curl http://localhost:8080/api/welcome/2
 ```
 
-### POST `/api/welcome`
+#### POST
 
 Stores a new welcome message in the database.
 
+Request body:
+
 - `content` – welcome message content.
 
-#### Example
+##### Example
 
 ```console
 curl \
