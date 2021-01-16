@@ -9,5 +9,9 @@ RUN gradle build -x test
 
 FROM openjdk:11-jre-buster
 EXPOSE 8080
-COPY --from=build_container /home/gradle/project/build/libs/*.jar /app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+RUN addgroup --system spring && adduser --system --no-create-home --ingroup spring spring
+WORKDIR /home/project
+RUN chown spring:spring .
+COPY --from=build_container --chown=spring:spring /home/gradle/project/build/libs/*.jar app.jar
+USER spring
+ENTRYPOINT ["java", "-jar", "app.jar"]
