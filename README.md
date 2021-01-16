@@ -35,13 +35,12 @@ Tear down:
 ./teardown.sh
 ```
 
+The application is now listening at `http://localhost:8080`.
+
 ### `docker-compose`
 
 ```console
-./gradlew build && docker-compose -f .docker/docker-compose.yml up --build
-
-# Or
-./gradlew build && cd .docker && docker-compose up --build
+docker-compose -f .docker/docker-compose.yml up --build
 ```
 
 The application is now listening at `http://localhost:8080`.
