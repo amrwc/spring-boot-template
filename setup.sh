@@ -1,17 +1,8 @@
 #!/usr/bin/env sh
-set -e
 
 PROJECT_NAME='renameme'
 NETWORK_NAME="${PROJECT_NAME}-network"
 DATABASE_NAME="${PROJECT_NAME}-database"
-
-echo "Compiling ${PROJECT_NAME}"
-docker run --rm \
-    -u gradle \
-    -v "${PWD}:/home/gradle/project" \
-    -w /home/gradle/project \
-    gradle:jdk11 \
-    gradle build -x test
 
 echo "Building ${PROJECT_NAME}"
 docker build -t "${PROJECT_NAME}:latest" -f .docker/Dockerfile .
@@ -32,4 +23,5 @@ docker run -it \
     --rm \
     -p 8080:8080 \
     --network="$NETWORK_NAME" \
+    --name "$PROJECT_NAME" \
     "$PROJECT_NAME"
