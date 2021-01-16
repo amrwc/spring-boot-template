@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  renameme-service:
+  renameme:
     container_name: renameme
     image: renameme
     build:
@@ -12,11 +12,11 @@ services:
     networks:
       - renameme-network
     links:
-      - postgresql-service
+      - renameme-database
     depends_on:
-      - postgresql-service
+      - renameme-database
 
-  postgresql-service:
+  renameme-database:
     container_name: renameme-database
     image: postgres
     networks:
