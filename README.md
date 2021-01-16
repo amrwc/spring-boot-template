@@ -19,23 +19,22 @@ automatically.
 First time:
 
 ```console
-./setup.sh
+./bin/setup.sh
 ```
+
+The application is now listening at `http://localhost:8080`.
 
 Subsequent runs:
 
 ```console
-docker start renameme-database
-docker run --rm -it renameme
+./bin/start.sh [--rebuild]
 ```
 
 Tear down:
 
 ```console
-./teardown.sh
+./bin/teardown.sh [--cache]
 ```
-
-The application is now listening at `http://localhost:8080`.
 
 ### `docker-compose`
 
@@ -44,6 +43,22 @@ docker-compose -f .docker/docker-compose.yml up --build
 ```
 
 The application is now listening at `http://localhost:8080`.
+
+### Gradle cache
+
+To make builds faster, reuse Gradle cache between runs.
+
+It's included in the `setup.sh` script, but not when running `docker-compose`.
+
+```console
+docker volume create --name gradle-cache
+```
+
+Prune the cache:
+
+```console
+docker volume rm gradle-cache
+```
 
 ## Clean up
 
