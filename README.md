@@ -11,6 +11,9 @@ This template has been bootstrapped using
 
 ## Setup
 
+The migrations from `src/main/resources/db/changelog-main.xml` are applied
+automatically.
+
 ### `docker run`
 
 First time:
@@ -41,14 +44,11 @@ Tear down:
 ./gradlew build && cd .docker && docker-compose up --build
 ```
 
-The migrations from `src/main/resources/db/changelog` are applied
-automatically.
-
 The application is now listening at `http://localhost:8080`.
 
 ## Clean up
 
-Rename the group and package name.
+Places around the project that need renaming.
 
 <details>
 
@@ -81,7 +81,7 @@ Click here to expand
    - `<IfFileName glob="log/test/renameme-*.log.gz"/>`
 1. `build.gradle`:
    - `group: 'me.rename'`
-2. `settings.gradle`:
+1. `settings.gradle`:
    - `rootProject.name = 'renameme'`
 
 </details>
