@@ -17,7 +17,7 @@ services:
       - postgresql-service
 
   postgresql-service:
-    container_name: postgresql-database
+    container_name: renameme-database
     image: postgres
     networks:
       - renameme-network

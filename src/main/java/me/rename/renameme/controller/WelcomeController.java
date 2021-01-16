@@ -31,7 +31,7 @@ public class WelcomeController {
      */
     @RequestMapping(path = "{id}", method = RequestMethod.GET)
     public ResponseEntity<WelcomeMessage> welcome(@PathVariable Optional<Long> id) {
-        log.info("Fetching the first welcome message");
+        log.info("Fetching the welcome message with id {}", id);
         return service.findWelcomeMessageById(id.orElse(1L))
                 .map(welcomeMessage -> new ResponseEntity<>(welcomeMessage, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
