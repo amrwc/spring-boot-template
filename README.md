@@ -6,49 +6,33 @@ In this template:
 - PostgreSQL, and
 - Docker.
 
-## Generate using Spring Initializr
-
 This template has been bootstrapped using
 [this Spring Initializr configuration][1].
 
-## Clean up
-
-Rename the group and package name.
-
-<details>
-
-<summary>
-Click here to expand
-</summary>
-
-1.  Directory structure:
-    - `src/main/java/me/rename/renameme`
-    - `src/test/java/me/rename/renameme`
-1.  `src/main/resources/application.properties`:
-    - `spring.datasource.url=jdbc:postgresql://postgresql-database:5432/renameme`
-1.  `src/main/resourcees/log4j2.xml`:
-    - `fileName="log/renameme.log"`
-    - `filePattern="log/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
-    - `<IfFileName glob="log/renameme-*.log.gz"/>`
-1.  `src/test/resourcees/log4j2.xml`:
-    - `fileName="log/test/renameme.log"`
-    - `filePattern="log/test/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
-    - `<IfFileName glob="log/test/renameme-*.log.gz"/>`
-1.  `build.gradle`:
-    - `group: 'me.rename'`
-1.  `docker-compose.yml`:
-    - `renameme-service`
-    - `container_name: renameme`
-    - `image: renameme`
-    - `- renameme-network`
-    - `- POSTGRES_DB=renameme`
-    - `renameme-network`
-1.  `settings.gradle`:
-    - `rootProject.name = 'renameme'`
-
-</details>
-
 ## Setup
+
+### `docker run`
+
+First time:
+
+```console
+./setup.sh
+```
+
+Subsequent runs:
+
+```console
+docker start renameme-database
+docker run --rm -it renameme
+```
+
+Tear down:
+
+```console
+./teardown.sh
+```
+
+### `docker-compose`
 
 ```console
 ./gradlew build && docker-compose -f .docker/docker-compose.yml up --build
@@ -61,6 +45,46 @@ The migrations from `src/main/resources/db/changelog` are applied
 automatically.
 
 The application is now listening at `http://localhost:8080`.
+
+## Clean up
+
+Rename the group and package name.
+
+<details>
+
+<summary>
+Click here to expand
+</summary>
+
+1. `docker-compose.yml`:
+   - `renameme-service`
+   - `container_name: renameme`
+   - `image: renameme`
+   - `- renameme-network`
+   - `container_name: renameme-database`
+   - `- POSTGRES_DB=renameme`
+   - `renameme-network:`
+1. `.docker/postgres-envars.list`:
+   - `POSTGRES_DB=renameme`
+1. Directory structure:
+   - `src/main/java/me/rename/renameme`
+   - `src/test/java/me/rename/renameme`
+1. `src/main/resources/application.properties`:
+   - `spring.datasource.url=jdbc:postgresql://renameme-database:5432/renameme`
+1. `src/main/resourcees/log4j2.xml`:
+   - `fileName="log/renameme.log"`
+   - `filePattern="log/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
+   - `<IfFileName glob="log/renameme-*.log.gz"/>`
+1. `src/test/resourcees/log4j2.xml`:
+   - `fileName="log/test/renameme.log"`
+   - `filePattern="log/test/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
+   - `<IfFileName glob="log/test/renameme-*.log.gz"/>`
+1. `build.gradle`:
+   - `group: 'me.rename'`
+2. `settings.gradle`:
+   - `rootProject.name = 'renameme'`
+
+</details>
 
 ## API
 
