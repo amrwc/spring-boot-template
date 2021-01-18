@@ -83,9 +83,7 @@ Click here to expand
 </summary>
 
 1. `.github/workflows/docker.yml`:
-   - `URL: 'http://localhost:8080/api/welcome/1'`
-1. `.github/workflows/docker-compose.yml`:
-   - `URL: 'http://localhost:8080/api/welcome/1'`
+   - This string appears twice: `URL: 'http://localhost:8080/api/welcome/1'`
 1. `docker-compose.yml`:
    - `renameme-service`
    - `container_name: renameme`
