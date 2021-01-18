@@ -11,42 +11,54 @@ This template has been bootstrapped using
 
 ## Setup
 
+### Migrations
+
 The migrations from `src/main/resources/db/changelog-main.xml` are applied
-automatically.
+automatically by default by Spring Boot under the hood.
 
 ### `docker run`
 
-First time:
-
 ```console
-./bin/setup.sh
+./bin/setup.sh [--debug|--suspend, --no-cache]
+./bin/start.sh
 ```
 
-The application is now listening at `http://localhost:8080`.
+The application is now listening at `http://localhost:8080`. If the `--debug`
+option has been used, the debugger is listening on port `8000` as should be
+confirmed in the logs.
 
-Subsequent runs:
-
-```console
-./bin/start.sh [--rebuild]
-```
-
-Tear down:
+#### Clean
 
 ```console
-./bin/teardown.sh [--cache]
+./bin/teardown.sh [--include-cache, --exclude-db]
 ```
 
 ### `docker-compose`
 
 ```console
-docker-compose -f .docker/docker-compose.yml up --build
+docker-compose --file .docker/docker-compose.yml up --build
 ```
 
 The application is now listening at `http://localhost:8080`.
 
+#### Debug
+
+```console
+docker-compose --file .docker/docker-compose.yml build --build-arg debug=true [--build-arg suspend=true]
+docker-compose --file .docker/docker-compose.yml up
+```
+
+The debug port can be accessed at `http://localhost:8000`.
+
+#### Clean
+
+```console
+docker-compose --file .docker/docker-compose.yml down
+```
+
 ### Gradle cache
 
-To make builds faster, reuse Gradle cache between runs.
+To speed up the builds, reuse Gradle cache between runs.
 
 It's included in the `setup.sh` script, but not when running `docker-compose`.
 
@@ -60,7 +72,7 @@ Prune the cache:
 docker volume rm gradle-cache
 ```
 
-## Clean up
+## Clean up the white-label project
 
 Places around the project that need renaming.
 
@@ -136,5 +148,10 @@ curl \
     --data '{"content": "Bar"}' \
     http://localhost:8080/api/welcome
 ```
+
+## Caveats
+
+- The `--suspend` option in `setup.sh` doesn't seem to work – something's wrong
+  with the `8000` port when the application is suspended.
 
 [1]: https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.1.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql

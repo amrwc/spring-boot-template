@@ -27,12 +27,20 @@ RUN gradle build -x test
 ##############################################################################
 FROM openjdk:11-jre-buster
 
+EXPOSE 8000
 EXPOSE 8080
 RUN addgroup --system spring && adduser --system --no-create-home --ingroup spring spring
 
 WORKDIR /home/project
 COPY --from=build_container /home/gradle/project/build/libs/*.jar app.jar
+COPY .docker/entrypoint.sh entrypoint.sh
 RUN chown spring:spring --recursive .
+RUN chmod 0554 entrypoint.sh
+
+ARG debug="false"
+ENV DEBUG="${debug}"
+ARG suspend="false"
+ENV SUSPEND="${suspend}"
 
 USER spring
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["./entrypoint.sh"]
