@@ -1,0 +1,57 @@
+name: Docker
+
+on:
+  push:
+    paths:
+      - '**.java'
+      - '**.properties'
+      - '.github/workflows/*.yml'
+      - 'bin/*'
+      - 'docker/*'
+      - 'build.gradle'
+
+jobs:
+  docker:
+    name: 'Docker: build and test'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the repository
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: ./bin/setup.sh
+
+      - name: Start the container
+        run: ./bin/start.sh --detach --dont-stop-db
+
+      - name: Send a request to the API
+        env:
+          URL: 'http://localhost:8080/api/welcome/1'
+        run: |
+          # Wait for Tomcat to come up
+          sleep 20
+          test 200 -eq "$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' ${{ env.URL }})"
+
+      - name: Teardown
+        run: ./bin/teardown.sh
+
+  docker-compose:
+    name: 'Docker Compose: build and test'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the repository
+        uses: actions/checkout@v2
+
+      - name: Build and up
+        run: docker-compose --file docker/docker-compose.yml up --build --detach
+
+      - name: Send a request to the API
+        env:
+          URL: 'http://localhost:8080/api/welcome/1'
+        run: |
+          # Wait for Tomcat to come up
+          sleep 20
+          test 200 -eq "$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' ${{ env.URL }})"
+
+      - name: Down
+        run: docker-compose --file docker/docker-compose.yml down
