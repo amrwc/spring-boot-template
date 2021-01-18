@@ -47,7 +47,7 @@ docker volume create --name "$CACHE_VOLUME"
 
 echo "${PURPLE}Building '${PROJECT}' image${NOFORMAT}"
 # shellcheck disable=SC2086
-docker build $_no_cache --tag "${PROJECT}:latest" --file .docker/Dockerfile $_build_args .
+docker build $_no_cache --tag "${PROJECT}:latest" --file docker/Dockerfile $_build_args .
 
 echo "${PURPLE}Creating '${NETWORK}' network${NOFORMAT}"
 docker network create --driver bridge "$NETWORK"
@@ -56,7 +56,7 @@ echo "${PURPLE}Creating '${DATABASE_IMAGE}' container${NOFORMAT}"
 docker create \
     --publish 5432:5432 \
     --network="$NETWORK" \
-    --env-file .docker/postgres-envars.list \
+    --env-file docker/postgres-envars.list \
     --name "$DATABASE" \
     "$DATABASE_IMAGE"
 

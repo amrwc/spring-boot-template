@@ -36,7 +36,7 @@ confirmed in the logs.
 ### `docker-compose`
 
 ```console
-docker-compose --file .docker/docker-compose.yml up --build
+docker-compose --file docker/docker-compose.yml up --build
 ```
 
 The application is now listening at `http://localhost:8080`.
@@ -44,8 +44,8 @@ The application is now listening at `http://localhost:8080`.
 #### Debug
 
 ```console
-docker-compose --file .docker/docker-compose.yml build --build-arg debug=true [--build-arg suspend=true]
-docker-compose --file .docker/docker-compose.yml up
+docker-compose --file docker/docker-compose.yml build --build-arg debug=true [--build-arg suspend=true]
+docker-compose --file docker/docker-compose.yml up
 ```
 
 The debug port can be accessed at `http://localhost:8000`.
@@ -53,7 +53,7 @@ The debug port can be accessed at `http://localhost:8000`.
 #### Clean
 
 ```console
-docker-compose --file .docker/docker-compose.yml down
+docker-compose --file docker/docker-compose.yml down
 ```
 
 ### Gradle cache
@@ -72,7 +72,7 @@ Prune the cache:
 docker volume rm gradle-cache
 ```
 
-## Clean up the white-label project
+## White-label clean-up
 
 Places around the project that need renaming.
 
@@ -90,7 +90,7 @@ Click here to expand
    - `container_name: renameme-database`
    - `- POSTGRES_DB=renameme`
    - `renameme-network:`
-1. `.docker/postgres-envars.list`:
+1. `docker/postgres-envars.list`:
    - `POSTGRES_DB=renameme`
 1. Directory structure:
    - `src/main/java/me/rename/renameme`
