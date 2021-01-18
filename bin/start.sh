@@ -7,6 +7,9 @@ NOFORMAT='\033[0m' PURPLE='\033[0;35m'
 
 while [ "$#" -gt 0 ]; do
     case $1 in
+    --detach)
+        _detach='true'
+        ;;
     --dont-stop-db)
         _dont_stop_db='true'
         ;;
@@ -18,11 +21,14 @@ while [ "$#" -gt 0 ]; do
     shift
 done
 
+[ 'true' = "$_detach" ] && interactive='' || interactive='--interactive'
+
 echo "${PURPLE}Starting '${DATABASE}' container${NOFORMAT}"
 docker start "$DATABASE"
 
 echo "${PURPLE}Starting '${PROJECT}' container${NOFORMAT}"
-docker start --interactive "$PROJECT"
+# shellcheck disable=SC2086
+docker start $interactive "$PROJECT"
 
 if [ 'true' != "$_dont_stop_db" ]; then
     echo "${PURPLE}Stopping '${DATABASE}' container${NOFORMAT}"
