@@ -22,8 +22,8 @@ automatically by default by Spring Boot under the hood.
 ### `docker run`
 
 ```console
-./bin/setup.sh [--debug|--suspend, --no-cache]
-./bin/start.sh
+./bin/setup.sh [(--debug|--suspend) --no-cache]
+./bin/start.sh [--detach --dont-stop-db]
 ```
 
 The application is now listening at `http://localhost:8080`. If the `--debug`
@@ -33,7 +33,7 @@ confirmed in the logs.
 #### Clean
 
 ```console
-./bin/teardown.sh [--include-cache, --exclude-db]
+./bin/teardown.sh [--exclude-db --include-cache]
 ```
 
 ### `docker-compose`
@@ -48,7 +48,7 @@ The application is now listening at `http://localhost:8080`.
 
 ```console
 docker-compose --file docker/docker-compose.yml build --build-arg debug=true [--build-arg suspend=true]
-docker-compose --file docker/docker-compose.yml up
+docker-compose --file docker/docker-compose.yml up [--detach]
 ```
 
 The debug port can be accessed at `http://localhost:8000`.
@@ -157,6 +157,9 @@ curl \
 ## Caveats
 
 - The `--suspend` option in `setup.sh` doesn't seem to work – something's wrong
-  with the `8000` port when the application is suspended.
+  with the `8000` port when the application is suspended, and the debugger
+  fails to connect.
+- The Docker GitHub workflow is quite slow (2-6 minutes per job). It should be
+  possible to solve it by caching the Docker images.
 
 [1]: https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.1.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql
