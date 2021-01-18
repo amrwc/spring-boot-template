@@ -7,8 +7,8 @@ NOFORMAT='\033[0m' PURPLE='\033[0;35m'
 
 while [ "$#" -gt 0 ]; do
     case $1 in
-    --rebuild)
-        rebuild='true'
+    --dont-stop-db)
+        _dont_stop_db='true'
         ;;
     *)
         echo "Unknown option: ${1}"
@@ -18,16 +18,13 @@ while [ "$#" -gt 0 ]; do
     shift
 done
 
-if [ 'true' = "$rebuild" ]; then
-    echo "${PURPLE}Building '${PROJECT}' image${NOFORMAT}"
-    docker build --tag "${PROJECT}:latest" --file .docker/Dockerfile .
-fi
-
-echo "${PURPLE}Running '${DATABASE}' container${NOFORMAT}"
+echo "${PURPLE}Starting '${DATABASE}' container${NOFORMAT}"
 docker start "$DATABASE"
 
-echo "${PURPLE}Running '${PROJECT}' container${NOFORMAT}"
+echo "${PURPLE}Starting '${PROJECT}' container${NOFORMAT}"
 docker start --interactive "$PROJECT"
 
-echo "${PURPLE}Stopping '${DATABASE}' container${NOFORMAT}"
-docker stop "$DATABASE"
+if [ 'true' != "$_dont_stop_db" ]; then
+    echo "${PURPLE}Stopping '${DATABASE}' container${NOFORMAT}"
+    docker stop "$DATABASE"
+fi

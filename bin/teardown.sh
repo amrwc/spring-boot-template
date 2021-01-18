@@ -10,8 +10,11 @@ NOFORMAT='\033[0m' PURPLE='\033[0;35m'
 
 while [ "$#" -gt 0 ]; do
     case $1 in
-    --cache)
-        cache='true'
+    --exclude-db)
+        _exclude_db='true'
+        ;;
+    --include-cache)
+        _include_cache='true'
         ;;
     *)
         echo "Unknown option: ${1}"
@@ -22,7 +25,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 echo "${PURPLE}Stopping '${PROJECT}' container${NOFORMAT}"
-docker container stop "PROJECT"
+docker container stop "$PROJECT"
 echo "${PURPLE}Removing '${PROJECT}' container${NOFORMAT}"
 docker container rm --volumes "$PROJECT"
 echo "${PURPLE}Removing '${PROJECT}' image${NOFORMAT}"
@@ -30,18 +33,20 @@ docker image rm "$PROJECT"
 
 echo "${PURPLE}Stopping '${DATABASE}' container${NOFORMAT}"
 docker container stop "$DATABASE"
-echo "${PURPLE}}Removing '${DATABASE}' container${NOFORMAT}"
-docker container rm --volumes "$DATABASE"
+if [ 'true' != "$_exclude_db" ]; then
+    echo "${PURPLE}Removing '${DATABASE}' container${NOFORMAT}"
+    docker container rm --volumes "$DATABASE"
+fi
 
 echo "${PURPLE}Removing '${NETWORK}' network${NOFORMAT}"
 docker network rm "$NETWORK"
+
+if [ 'true' = "$_include_cache" ]; then
+    echo "${PURPLE}Removing '${CACHE_VOLUME}' volume${NOFORMAT}"
+    docker volume rm "$CACHE_VOLUME"
+fi
 
 for directory in $TEMP_DIRS; do
     echo "${PURPLE}Removing '${directory}'${NOFORMAT}"
     rm -rf "$directory"
 done
-
-if [ 'true' = "$cache" ]; then
-    echo "${PURPLE}Removing '${CACHE_VOLUME}' volume${NOFORMAT}"
-    docker volume rm "$CACHE_VOLUME"
-fi
