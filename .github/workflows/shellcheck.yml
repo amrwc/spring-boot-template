@@ -5,6 +5,10 @@ on:
     paths:
       - '**.sh'
       - '.github/workflows/*.yml'
+  pull_request:
+    paths:
+      - '**.sh'
+      - '.github/workflows/*.yml'
 
 jobs:
   shellcheck:
