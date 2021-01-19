@@ -3,10 +3,11 @@ name: Unit Tests
 on:
   push:
     paths:
+      - '.github/workflows/*.yml'
       - '**.java'
       - '**.properties'
-      - '.github/workflows/*.yml'
       - 'build.gradle'
+      - 'settings.gradle'
 
 jobs:
   build:
