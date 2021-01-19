@@ -17,9 +17,11 @@ jobs:
       - name: ShellCheck annotations
         uses: reviewdog/action-shellcheck@v1
         with:
-          reporter: github-pr-check
+          reporter: github-pr-review
           level: info
-          exclude: |
-            .git/*
-            gradle/*
-            gradlew
+          fail_on_error: true
+          shellcheck_flags: --severity=style
+#          exclude: |
+#            .git/*
+#            gradle/*
+#            gradlew
