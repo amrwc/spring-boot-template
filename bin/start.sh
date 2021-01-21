@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-PROJECT='renameme'
-DATABASE="${PROJECT}-database"
+MAIN_IMAGE='renameme'
+DATABASE="${MAIN_IMAGE}-database"
 
 NOFORMAT='\033[0m' PURPLE='\033[0;35m'
 
@@ -26,9 +26,9 @@ done
 echo "${PURPLE}Starting '${DATABASE}' container${NOFORMAT}"
 docker start "$DATABASE"
 
-echo "${PURPLE}Starting '${PROJECT}' container${NOFORMAT}"
+echo "${PURPLE}Starting '${MAIN_IMAGE}' container${NOFORMAT}"
 # shellcheck disable=SC2086
-docker start $interactive "$PROJECT"
+docker start $interactive "$MAIN_IMAGE"
 
 if [ 'true' != "$_dont_stop_db" ]; then
     echo "${PURPLE}Stopping '${DATABASE}' container${NOFORMAT}"
