@@ -1,10 +1,10 @@
 #!/usr/bin/env sh
 
-PROJECT='renameme'
-NETWORK="${PROJECT}-network"
-DATABASE="${PROJECT}-database"
-TEMP_DIRS='.gradle build'
+MAIN_IMAGE='renameme'
+NETWORK="${MAIN_IMAGE}-network"
+DATABASE="${MAIN_IMAGE}-database"
 CACHE_VOLUME='gradle-cache'
+TEMP_DIRECTORIES='.gradle build'
 
 NOFORMAT='\033[0m' PURPLE='\033[0;35m'
 
@@ -24,12 +24,12 @@ while [ "$#" -gt 0 ]; do
     shift
 done
 
-echo "${PURPLE}Stopping '${PROJECT}' container${NOFORMAT}"
-docker container stop "$PROJECT"
-echo "${PURPLE}Removing '${PROJECT}' container${NOFORMAT}"
-docker container rm --volumes "$PROJECT"
-echo "${PURPLE}Removing '${PROJECT}' image${NOFORMAT}"
-docker image rm "$PROJECT"
+echo "${PURPLE}Stopping '${MAIN_IMAGE}' container${NOFORMAT}"
+docker container stop "$MAIN_IMAGE"
+echo "${PURPLE}Removing '${MAIN_IMAGE}' container${NOFORMAT}"
+docker container rm --volumes "$MAIN_IMAGE"
+echo "${PURPLE}Removing '${MAIN_IMAGE}' image${NOFORMAT}"
+docker image rm "$MAIN_IMAGE"
 
 echo "${PURPLE}Stopping '${DATABASE}' container${NOFORMAT}"
 docker container stop "$DATABASE"
@@ -46,7 +46,7 @@ if [ 'true' = "$_include_cache" ]; then
     docker volume rm "$CACHE_VOLUME"
 fi
 
-for directory in $TEMP_DIRS; do
+for directory in $TEMP_DIRECTORIES; do
     echo "${PURPLE}Removing '${directory}'${NOFORMAT}"
     rm -rf "$directory"
 done
