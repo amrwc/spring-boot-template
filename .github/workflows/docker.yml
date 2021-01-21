@@ -3,7 +3,7 @@ name: Docker
 on:
   push:
     paths:
-      - '.github/workflows/*.yml'
+      - '.github/workflows/docker.yml'
       - 'bin/*'
       - 'docker/*'
       - '**.java'
@@ -12,9 +12,34 @@ on:
       - 'settings.gradle'
 
 env:
-  API_TEST: |
+  USE_CACHE: 'true'
+  MAIN_IMAGE: 'renameme'
+  GRADLE_CONTAINER_ALIAS: 'gradle_container'
+  REGISTRY: 'docker.pkg.github.com'
+
+  SET_VARIABLES: |
+    if [ 'true' = "$USE_CACHE" ]; then
+      gradle_image="${MAIN_IMAGE}-${GRADLE_CONTAINER_ALIAS}"
+      echo "GRADLE_IMAGE=${gradle_image}" >> $GITHUB_ENV
+      echo "GRADLE_CONTAINER_CACHE=${REGISTRY}/${GITHUB_REPOSITORY}/${gradle_image}" >> $GITHUB_ENV
+      echo "MAIN_CONTAINER_CACHE=${REGISTRY}/${GITHUB_REPOSITORY}/${MAIN_IMAGE}" >> $GITHUB_ENV
+    fi
+
+  PULL_CACHE: |
+    docker pull "$GRADLE_CONTAINER_CACHE" || true
+    docker pull "$MAIN_CONTAINER_CACHE" || true
+
+  TAG_PUSH: |
+    docker tag "$GRADLE_IMAGE" "$GRADLE_CONTAINER_CACHE" \
+      && docker push "$GRADLE_CONTAINER_CACHE" \
+      || true
+    docker tag "$MAIN_IMAGE" "$MAIN_CONTAINER_CACHE" \
+      && docker push "$MAIN_CONTAINER_CACHE" \
+      || true
+
+  TEST_API: |
     # Testing the API
-    sleep 20 # Wait for Tomcat to come up
+    sleep 15 # Wait for Tomcat to come up
     url='http://localhost:8080/api/welcome/1'
     response_code="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "$url")"
     test 200 -eq "$response_code"
@@ -27,14 +52,42 @@ jobs:
       - name: Clone the repository
         uses: actions/checkout@v2
 
+      - name: Add variables
+        run: ${{ env.SET_VARIABLES }}
+
+      - name: Log into the Docker registry
+        if: ${{ 'true' == env.USE_CACHE }}
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login "$REGISTRY" --username "$GITHUB_ACTOR" --password-stdin
+
+      - name: Pull cached images
+        if: ${{ 'true' == env.USE_CACHE }}
+        run: ${{ env.PULL_CACHE }}
+
       - name: Build
-        run: ./bin/setup.sh
+        run: |
+          if [ 'true' = "$USE_CACHE" ]; then
+            docker build \
+              --cache-from "$GRADLE_CONTAINER_CACHE" \
+              --target "$GRADLE_CONTAINER_ALIAS" \
+              --tag "$GRADLE_IMAGE" \
+              --file ./docker/Dockerfile \
+              .
+            _cache_from="--cache-from ${GRADLE_CONTAINER_CACHE} --cache-from ${MAIN_CONTAINER_CACHE}"
+          else
+            _cache_from=''
+          fi
+          # shellcheck disable=SC2086
+          ./bin/setup.sh $_cache_from
+
+      - name: Tag and push the images
+        if: ${{ 'true' == env.USE_CACHE }}
+        run: ${{ env.TAG_PUSH }}
 
       - name: Start the container
         run: ./bin/start.sh --detach --dont-stop-db
 
       - name: Test the API
-        run: ${{ env.API_TEST }}
+        run: ${{ env.TEST_API }}
 
       - name: Teardown
         run: ./bin/teardown.sh
@@ -46,11 +99,34 @@ jobs:
       - name: Clone the repository
         uses: actions/checkout@v2
 
-      - name: Build and up
-        run: docker-compose --file docker/docker-compose.yml up --build --detach
+      - name: Add variables
+        run: ${{ env.SET_VARIABLES }}
+
+      - name: Log into the Docker registry
+        if: ${{ 'true' == env.USE_CACHE }}
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login "$REGISTRY" --username "$GITHUB_ACTOR" --password-stdin
+
+      - name: Pull cached images
+        if: ${{ 'true' == env.USE_CACHE }}
+        run: ${{ env.PULL_CACHE }}
+
+      - name: Build
+        run: |
+          if [ 'true' = "$USE_CACHE" ]; then
+            echo "GRADLE_IMAGE=${GRADLE_CONTAINER_CACHE}" > ./docker/.env.ci
+            echo "MAIN_IMAGE=${MAIN_CONTAINER_CACHE}" >> ./docker/.env.ci
+            _env_file='--env-file ./docker/.env.ci'
+          else
+            _env_file=''
+          fi
+          # shellcheck disable=SC2086
+          docker-compose --file ./docker/docker-compose.yml $_env_file build
+
+      - name: Up
+        run: docker-compose --file ./docker/docker-compose.yml up --detach
 
       - name: Test the API
-        run: ${{ env.API_TEST }}
+        run: ${{ env.TEST_API }}
 
       - name: Down
-        run: docker-compose --file docker/docker-compose.yml down
+        run: docker-compose --file ./docker/docker-compose.yml down

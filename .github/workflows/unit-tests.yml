@@ -3,7 +3,7 @@ name: Unit Tests
 on:
   push:
     paths:
-      - '.github/workflows/*.yml'
+      - '.github/workflows/unit-tests.yml'
       - '**.java'
       - '**.properties'
       - 'build.gradle'
@@ -17,7 +17,6 @@ jobs:
       - name: Clone the repository
         uses: actions/checkout@v2
 
-      # https://docs.github.com/en/actions/guides/caching-dependencies-to-speed-up-workflows
       - name: Cache Gradle
         uses: actions/cache@v2
         env:
