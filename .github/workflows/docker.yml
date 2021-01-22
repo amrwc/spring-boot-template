@@ -5,11 +5,11 @@ on:
     paths:
       - '.github/workflows/docker.yml'
       - 'bin/*'
+      - '!bin/integration_tests.sh'
       - 'docker/*'
       - '**.java'
-      - '**.properties'
-      - 'build.gradle'
-      - 'settings.gradle'
+      - '**application.yml'
+      - '*.gradle'
 
 env:
   USE_CACHE: 'true'
