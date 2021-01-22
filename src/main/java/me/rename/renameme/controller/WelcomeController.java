@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 /**
@@ -43,7 +44,7 @@ public class WelcomeController {
      * @return HTTP status
      */
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<HttpStatus> addWelcome(@RequestBody WelcomeMessageRequest request) {
+    public ResponseEntity<HttpStatus> addWelcome(@RequestBody @Valid WelcomeMessageRequest request) {
         log.info("Creating a welcome message: {}", request);
         service.createWelcomeMessage(request.getContent());
         return new ResponseEntity<>(HttpStatus.CREATED);
