@@ -168,7 +168,5 @@ curl \
 - The `--suspend` option in `setup.sh` doesn't seem to work – something's wrong
   with the `8000` port when the application is suspended, and the debugger
   fails to connect.
-- The Docker GitHub workflow is quite slow (2-6 minutes per job). It should be
-  possible to solve it by caching the Docker images.
 
 [1]: https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.1.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql
