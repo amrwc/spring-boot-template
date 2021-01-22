@@ -1,13 +1,18 @@
-name: Unit Tests
+name: Unit and Integration Tests
 
 on:
   push:
     paths:
-      - '.github/workflows/unit-tests.yml'
+      - '.github/workflows/unit-and-integration-tests.yml'
+      - 'bin/integration_tests.sh'
       - '**.java'
       - '**.properties'
       - 'build.gradle'
       - 'settings.gradle'
+
+env:
+  GRADLE_CACHE: cache-gradle
+  INTEGRATION_TESTS_ENABLED: true
 
 jobs:
   build:
@@ -19,8 +24,6 @@ jobs:
 
       - name: Cache Gradle
         uses: actions/cache@v2
-        env:
-          CACHE_NAME: cache-gradle
         with:
           path: |
             ~/.gradle/caches
@@ -38,10 +41,14 @@ jobs:
           architecture: x64
 
       - name: Grant Gradle wrapper (gradlew) sufficient permissions
-        run: chmod +x gradlew
+        run: chmod +x ./gradlew
 
       - name: Build the project
         run: ./gradlew build
 
       - name: Run unit tests
         run: ./gradlew test
+
+      - name: Run integration tests
+        if: ${{ 'true' == env.INTEGRATION_TESTS_ENABLED }}
+        run: ./bin/integration_tests.sh

@@ -88,7 +88,7 @@ Click here to expand
 1. `.github/workflows/docker.yml`:
    - `MAIN_IMAGE: 'renameme'`
    - `url='http://localhost:8080/api/welcome/1'`
-1. `docker-compose.yml`:
+1. `docker/docker-compose.yml`:
    - `renameme-network:`
    - `container_name: renameme-database`
    - `- renameme-network`
@@ -100,6 +100,8 @@ Click here to expand
    - `- renameme-database`
 1. `docker/postgres-envars.list`:
    - `POSTGRES_DB=renameme`
+1. `bin/integration_tests.sh`:
+   - `MAIN_IMAGE='renameme'`
 1. `bin/setup.sh`:
    - `MAIN_IMAGE='renameme'`
 1. `bin/start.sh`:
@@ -115,7 +117,9 @@ Click here to expand
    - `fileName="log/renameme.log"`
    - `filePattern="log/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
    - `<IfFileName glob="log/renameme-*.log.gz"/>`
-1. `src/test/resourcees/log4j2.xml`:
+1. `src/test/resources/application.yml`:
+   - `url: 'jdbc:postgresql://127.0.0.1:5432/renameme'`
+1. `src/test/resources/log4j2.xml`:
    - `fileName="log/test/renameme.log"`
    - `filePattern="log/test/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
    - `<IfFileName glob="log/test/renameme-*.log.gz"/>`
