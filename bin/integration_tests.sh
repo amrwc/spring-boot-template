@@ -2,7 +2,7 @@
 
 MAIN_IMAGE='renameme'
 DATABASE="${MAIN_IMAGE}-test-database"
-DATABASE_IMAGE="postgres:latest"
+DATABASE_IMAGE='postgres:latest'
 
 DATABASE_PORT='5432'
 

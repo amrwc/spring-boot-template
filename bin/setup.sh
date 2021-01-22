@@ -4,7 +4,7 @@ CACHE_VOLUME='gradle-cache'
 MAIN_IMAGE='renameme'
 NETWORK="${MAIN_IMAGE}-network"
 DATABASE="${MAIN_IMAGE}-database"
-DATABASE_IMAGE="postgres:latest"
+DATABASE_IMAGE='postgres:latest'
 
 DATABASE_PORT='5432'
 SPRING_PORT='8080'
