@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Getter
@@ -22,6 +23,7 @@ public class WelcomeMessage {
     private Long id;
 
     @Column(name = "CONTENT", length = 64)
+    @NotBlank(message = "Welcome message content cannot be blank")
     private String content;
 
     public WelcomeMessage(final String content) {
