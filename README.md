@@ -1,6 +1,6 @@
 # Spring Boot Template
 
-![Unit Tests](https://github.com/amrwc/spring-boot-template/workflows/Unit%20Tests/badge.svg)
+![Unit and Integration Tests](https://github.com/amrwc/spring-boot-template/workflows/Unit%20and%20Integration%20Tests/badge.svg)
 ![Docker](https://github.com/amrwc/spring-boot-template/workflows/Docker/badge.svg)
 
 In this template:
