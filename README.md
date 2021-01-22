@@ -75,6 +75,63 @@ Prune the cache:
 docker volume rm gradle-cache
 ```
 
+## Test
+
+### Unit tests
+
+```console
+./gradlew build && ./gradlew test
+```
+
+### Integration tests
+
+```console
+./gradlew build && ./bin/integration_tests.sh
+```
+
+## API
+
+### `/api/welcome`
+
+#### GET `[/<id>]`
+
+Returns a welcome message with the given ID.
+
+Path variables:
+
+- `id` – primary key of the `WELCOME_MESSAGES` table. Default: `1`
+
+##### Example
+
+```console
+# {"id":2,"content":"Foo"}
+curl http://localhost:8080/api/welcome/2
+```
+
+#### POST
+
+Stores a new welcome message in the database.
+
+Request body:
+
+- `content` – welcome message content.
+
+##### Example
+
+```console
+curl \
+    --request POST \
+    --header 'Content-Type: application/json' \
+    --data '{"content": "Bar"}' \
+    http://localhost:8080/api/welcome
+```
+
+## Caveats
+
+- The `--suspend` option in `setup.sh` doesn't seem to work – something's wrong
+  with the `8000` port when the application is suspended, and the debugger
+  fails to connect.
+
 ## White-label clean-up
 
 Places around the project that need renaming.
@@ -129,48 +186,5 @@ Click here to expand
    - `rootProject.name = 'renameme'`
 
 </details>
-
-## API
-
-### `/api/welcome`
-
-#### GET `[/<id>]`
-
-Returns a welcome message with the given ID.
-
-Path variables:
-
-- `id` – primary key of the `WELCOME_MESSAGES` table. Default: `1`
-
-##### Example
-
-```console
-# {"id":2,"content":"Foo"}
-curl http://localhost:8080/api/welcome/2
-```
-
-#### POST
-
-Stores a new welcome message in the database.
-
-Request body:
-
-- `content` – welcome message content.
-
-##### Example
-
-```console
-curl \
-    --request POST \
-    --header 'Content-Type: application/json' \
-    --data '{"content": "Bar"}' \
-    http://localhost:8080/api/welcome
-```
-
-## Caveats
-
-- The `--suspend` option in `setup.sh` doesn't seem to work – something's wrong
-  with the `8000` port when the application is suspended, and the debugger
-  fails to connect.
 
 [1]: https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.1.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql
