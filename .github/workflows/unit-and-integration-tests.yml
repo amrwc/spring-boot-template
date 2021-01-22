@@ -28,9 +28,9 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-build-${{ env.GRADLE_CACHE }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.CACHE_NAME }}-
+            ${{ runner.os }}-build-${{ env.GRADLE_CACHE }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
@@ -62,9 +62,9 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-build-${{ env.GRADLE_CACHE }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.CACHE_NAME }}-
+            ${{ runner.os }}-build-${{ env.GRADLE_CACHE }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
