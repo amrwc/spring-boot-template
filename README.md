@@ -1,7 +1,7 @@
 # Spring Boot Template
 
-![Docker](https://github.com/amrwc/spring-boot-template/workflows/Docker/badge.svg)
-![Unit and Integration Tests](https://github.com/amrwc/spring-boot-template/workflows/Unit%20and%20Integration%20Tests/badge.svg)
+[![Docker](https://github.com/amrwc/spring-boot-template/workflows/Docker/badge.svg)](https://github.com/amrwc/spring-boot-template/actions)
+[![Unit and Integration Tests](https://github.com/amrwc/spring-boot-template/workflows/Unit%20and%20Integration%20Tests/badge.svg)](https://github.com/amrwc/spring-boot-template/actions)
 
 In this template:
 
@@ -9,8 +9,8 @@ In this template:
 - PostgreSQL, and
 - Docker.
 
-This template has been bootstrapped using
-[this Spring Initializr configuration][1].
+This template has been bootstrapped using [this Spring Initializr
+configuration][1].
 
 ## Setup
 
@@ -157,6 +157,8 @@ Click here to expand
    - `- renameme-database`
 1. `docker/postgres-envars.list`:
    - `POSTGRES_DB=renameme`
+1. `bin/pgadmin.sh`:
+   - `MAIN_IMAGE='renameme'`
 1. `bin/integration_tests.sh`:
    - `MAIN_IMAGE='renameme'`
 1. `bin/setup.sh`:
@@ -168,8 +170,10 @@ Click here to expand
 1. Directory structure:
    - `src/main/java/me/rename/renameme`
    - `src/test/java/me/rename/renameme`
-1. `src/main/resources/application.properties`:
-   - `spring.datasource.url=jdbc:postgresql://renameme-database:5432/renameme`
+1. `src/main/resources/application.yml`:
+   - `url: 'jdbc:postgresql://renameme-database:5432/renameme'`
+1. `src/main/resources/liquibase.properties`:
+   - `url=jdbc:postgresql://localhost:5432/renameme`
 1. `src/main/resourcees/log4j2.xml`:
    - `fileName="log/renameme.log"`
    - `filePattern="log/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
@@ -187,4 +191,5 @@ Click here to expand
 
 </details>
 
-[1]: https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.2.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql,validation
+[1]:
+  https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.2.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql,validation

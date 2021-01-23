@@ -4,8 +4,9 @@ on:
   push:
     paths:
       - '.github/workflows/docker.yml'
-      - 'bin/*'
-      - '!bin/integration_tests.sh'
+      - 'bin/setup.sh'
+      - 'bin/start.sh'
+      - 'bin/teardown.sh'
       - 'docker/*'
       - '**.java'
       - '**application.yml'
