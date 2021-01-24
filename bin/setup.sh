@@ -51,6 +51,10 @@ if [ 'debug=true' = "$_debug" ] || [ 'suspend=true' = "$_suspend" ]; then
     _publish_main="${_publish_main} --publish ${DEBUG_PORT}:${DEBUG_PORT}"
 fi
 
+if [ '--no-cache' = "$_no_cache" ]; then
+    _cache_from=''
+fi
+
 echo "${PURPLE}Creating '${CACHE_VOLUME}' volume${NOFORMAT}"
 docker volume create --name "$CACHE_VOLUME"
 
