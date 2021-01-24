@@ -26,6 +26,8 @@ Example:
 </databaseChangeLog>
 ```
 
+More on this can be found in the documentation [here][5].
+
 ## Prerequisites
 
 - Local Liquibase installation. Either download it [here][3], or use package
@@ -69,16 +71,29 @@ liquibase \
     rollbackCount 1
 ```
 
+## Letting Spring apply the migrations automatically
+
+To let Spring apply the migrations on startup, import Liquibase inside
+`build.gradle`. The auto-configuration should work out-of-the-box and use the
+database connection string from `application.yml`.
+
+```groovy
+implementation "org.liquibase:liquibase-core:4.2.2"
+```
+
 ## Caveats
 
-- When the initial migrations are applied by Spring, an older version of
-  Liquibase is used. This means that executing rollback is not possible before
-  the change sets are reapplied using the local Liquibase installation.
-  Therefore, before doing anything else, consider running `liquibase update` to
-  override the default migrations. E.g. run `update`, `rollback`, and then
-  `update` again to be at the starting point, but after latest migrations.
+- If the initial migrations are applied by Spring, doing rollbacks on the
+  database using local Liquibase installation doesn't seem to work.
+  - A solution to this is simply not allow Spring to apply the migrations on
+    startup and do it manually, which is also a better practice in general.
+  - Although, a solution to the problem at hand is to run `update` and then
+    it's possible to roll back locally. Though, it negates the initial
+    migration by Spring, making it redundant in the first place.
 
 [1]: https://docs.liquibase.com
 [2]: https://docs.liquibase.com/concepts/basic/sql-format.html
 [3]: https://www.liquibase.org/download
 [4]: https://jdbc.postgresql.org/download.html
+[5]:
+  https://docs.liquibase.com/workflows/liquibase-community/migrate-with-sql.html

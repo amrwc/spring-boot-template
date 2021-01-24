@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/docker.yml'
+      - 'bin/apply_migrations.sh'
       - 'bin/setup.sh'
       - 'bin/start.sh'
       - 'bin/teardown.sh'
@@ -92,7 +93,7 @@ jobs:
         run: ${{ env.TAG_PUSH }}
 
       - name: Start the container
-        run: ./bin/start.sh --detach --dont-stop-db
+        run: ./bin/start.sh --apply-migrations --detach --dont-stop-db
 
       - name: Test the API
         run: ${{ env.TEST_API }}
@@ -132,6 +133,9 @@ jobs:
 
       - name: Up
         run: docker-compose --file ./docker/docker-compose.yml up --detach
+
+      - name: Apply database migrations
+        run: ./bin/apply_migrations.sh
 
       - name: Test the API
         run: ${{ env.TEST_API }}

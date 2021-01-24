@@ -15,6 +15,9 @@ docker run --detach \
     --name "$DATABASE" \
     "$DATABASE_IMAGE"
 
+echo "${PURPLE}Applying database migrations${NOFORMAT}"
+./bin/apply_migrations.sh
+
 echo "${PURPLE}Running integration tests${NOFORMAT}"
 ./gradlew integrationTest
 

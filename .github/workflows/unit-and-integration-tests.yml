@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/unit-and-integration-tests.yml'
+      - 'bin/apply_migrations.sh'
       - 'bin/integration_tests.sh'
       - 'src/main/**.java'
       - 'src/main/resources/application.yml'
