@@ -148,6 +148,16 @@ Click here to expand
 1. `.github/workflows/docker.yml`:
    - `MAIN_IMAGE: 'renameme'`
    - `url='http://localhost:8080/api/welcome/1'`
+1. `bin/pgadmin.sh`:
+   - `MAIN_IMAGE='renameme'`
+1. `bin/integration_tests.sh`:
+   - `MAIN_IMAGE='renameme'`
+1. `bin/setup.sh`:
+   - `MAIN_IMAGE='renameme'`
+1. `bin/start.sh`:
+   - `MAIN_IMAGE='renameme'`
+1. `bin/teardown.sh`:
+   - `MAIN_IMAGE='renameme'`
 1. `docker/docker-compose.yml`:
    - `renameme-network:`
    - `container_name: renameme-database`
@@ -160,16 +170,6 @@ Click here to expand
    - `- renameme-database`
 1. `docker/postgres-envars.list`:
    - `POSTGRES_DB=renameme`
-1. `bin/pgadmin.sh`:
-   - `MAIN_IMAGE='renameme'`
-1. `bin/integration_tests.sh`:
-   - `MAIN_IMAGE='renameme'`
-1. `bin/setup.sh`:
-   - `MAIN_IMAGE='renameme'`
-1. `bin/start.sh`:
-   - `MAIN_IMAGE='renameme'`
-1. `bin/teardown.sh`:
-   - `MAIN_IMAGE='renameme'`
 1. Directory structure:
    - `src/main/java/me/rename/renameme`
    - `src/test/java/me/rename/renameme`
