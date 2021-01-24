@@ -24,7 +24,7 @@ if [ ! -f "$DRIVER_PATH" ]; then
 fi
 
 liquibase_cmd='liquibase'
-if ! $liquibase_cmd --version >/dev/null; then
+if ! $liquibase_cmd --version >/dev/null 2>&1; then
     if [ ! -f "$LIQUIBASE_PATH" ]; then
         echo "${PURPLE}Downloading and extracting Liquibase to ${LIQUIBASE_PATH}${NOFORMAT}"
         mkdir -p "$LIQUIBASE_DIR"
