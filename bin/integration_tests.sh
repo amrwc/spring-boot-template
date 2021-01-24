@@ -16,6 +16,7 @@ docker run --detach \
     "$DATABASE_IMAGE"
 
 echo "${PURPLE}Applying database migrations${NOFORMAT}"
+sleep 3 # Wait for the database to come up
 ./bin/apply_migrations.sh
 
 echo "${PURPLE}Running integration tests${NOFORMAT}"
