@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/unit-and-integration-tests.yml'
+      - 'bin/apply_migrations.sh'
       - 'bin/integration_tests.sh'
       - 'src/main/**.java'
       - 'src/main/resources/application.yml'
@@ -11,8 +12,9 @@ on:
       - '*.gradle'
 
 env:
-  GRADLE_CACHE: cache-gradle
-  INTEGRATION_TESTS_ENABLED: true
+  INTEGRATION_TESTS_ENABLED: 'true'
+  GRADLE_CACHE: 'cache-gradle'
+  TMP_CACHE: 'cache-tmp'
 
 jobs:
   unit-tests:
@@ -65,6 +67,16 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.GRADLE_CACHE }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.GRADLE_CACHE }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Cache ./tmp/*
+        uses: actions/cache@v2
+        with:
+          path: ./tmp
+          key: ${{ runner.os }}-build-${{ env.TMP_CACHE }}-${{ hashFiles('./tmp/*') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.TMP_CACHE }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
