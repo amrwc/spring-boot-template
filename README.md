@@ -1,29 +1,31 @@
 # Spring Boot Template
 
-![Docker](https://github.com/amrwc/spring-boot-template/workflows/Docker/badge.svg)
-![Unit and Integration Tests](https://github.com/amrwc/spring-boot-template/workflows/Unit%20and%20Integration%20Tests/badge.svg)
+[![Docker](https://github.com/amrwc/spring-boot-template/workflows/Docker/badge.svg)](https://github.com/amrwc/spring-boot-template/actions)
+[![Unit and Integration Tests](https://github.com/amrwc/spring-boot-template/workflows/Unit%20and%20Integration%20Tests/badge.svg)](https://github.com/amrwc/spring-boot-template/actions)
 
 In this template:
 
 - Spring Boot,
-- PostgreSQL, and
-- Docker.
+- PostgreSQL,
+- Docker + Docker Compose,
+- GitHub workflows:
+  - pure Docker and Docker Compose setups,
+  - unit and integration tests of the Spring Boot application.
 
-This template has been bootstrapped using
-[this Spring Initializr configuration][1].
+This template has been bootstrapped using [this Spring Initializr
+configuration][spring_initializr].
 
 ## Setup
 
 ### Migrations
 
-The migrations from `src/main/resources/db/changelog-main.xml` are applied
-automatically by default by Spring Boot under the hood.
+See the [Database Migrations][db_migrations] document.
 
 ### `docker run`
 
 ```console
 ./bin/setup.sh [(--debug|--suspend) --no-cache]
-./bin/start.sh [--detach --dont-stop-db]
+./bin/start.sh [--apply-migrations --detach --dont-stop-db]
 ```
 
 The application is now listening at `http://localhost:8080`. If the `--debug`
@@ -40,6 +42,7 @@ confirmed in the logs.
 
 ```console
 docker-compose --file docker/docker-compose.yml up --build
+./bin/apply_migrations.sh
 ```
 
 The application is now listening at `http://localhost:8080`.
@@ -157,6 +160,8 @@ Click here to expand
    - `- renameme-database`
 1. `docker/postgres-envars.list`:
    - `POSTGRES_DB=renameme`
+1. `bin/pgadmin.sh`:
+   - `MAIN_IMAGE='renameme'`
 1. `bin/integration_tests.sh`:
    - `MAIN_IMAGE='renameme'`
 1. `bin/setup.sh`:
@@ -168,8 +173,10 @@ Click here to expand
 1. Directory structure:
    - `src/main/java/me/rename/renameme`
    - `src/test/java/me/rename/renameme`
-1. `src/main/resources/application.properties`:
-   - `spring.datasource.url=jdbc:postgresql://renameme-database:5432/renameme`
+1. `src/main/resources/application.yml`:
+   - `url: 'jdbc:postgresql://renameme-database:5432/renameme'`
+1. `src/main/resources/liquibase.properties`:
+   - `url=jdbc:postgresql://localhost:5432/renameme`
 1. `src/main/resourcees/log4j2.xml`:
    - `fileName="log/renameme.log"`
    - `filePattern="log/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
@@ -187,4 +194,6 @@ Click here to expand
 
 </details>
 
-[1]: https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.2.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql,validation
+[spring_initializr]:
+  https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.2.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql,validation
+[db_migrations]: ./docs/database-migrations.md

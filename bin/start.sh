@@ -7,6 +7,9 @@ NOFORMAT='\033[0m' PURPLE='\033[0;35m'
 
 while [ "$#" -gt 0 ]; do
     case $1 in
+    --apply-migrations)
+        _apply_migrations='true'
+        ;;
     --detach)
         _detach='true'
         ;;
@@ -25,6 +28,12 @@ done
 
 echo "${PURPLE}Starting '${DATABASE}' container${NOFORMAT}"
 docker start "$DATABASE"
+
+if [ 'true' = "$_apply_migrations" ]; then
+    echo "${PURPLE}Applying database migrations${NOFORMAT}"
+    sleep 3 # Wait for the database to come up
+    ./bin/apply_migrations.sh
+fi
 
 echo "${PURPLE}Starting '${MAIN_IMAGE}' container${NOFORMAT}"
 # shellcheck disable=SC2086

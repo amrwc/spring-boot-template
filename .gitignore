@@ -38,3 +38,4 @@ out/
 
 ### The application's output ###
 log/
+tmp/
