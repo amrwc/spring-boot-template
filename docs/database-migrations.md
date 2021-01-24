@@ -1,7 +1,38 @@
 # Database Migrations
 
-Migrations are done with [Liquibase][1] using [SQL format][2]. The SQL change
-sets are located in `src/main/resources/db/changelog`.
+## Prerequisites
+
+- If only up/update operation is required, use the `./bin/apply_migrations.sh`
+  script.
+- Local Liquibase installation. Either download it [here][liquibase_download],
+  or use package manager, such as Homebrew:
+
+  ```console
+  brew install liquibase
+  ```
+
+- Liquibase added to path to be accessible from anywhere. At the end of
+  Homebrew installation, the following tip is displayed:
+
+  ```console
+  You should set the environment variable LIQUIBASE_HOME to
+    /usr/local/opt/liquibase/libexec
+  ```
+
+  Therefore, do:
+
+  ```console
+  export LIQUIBASE_HOME='/usr/local/opt/liquibase/libexec'
+  ```
+
+- Database driver JAR. For Postgres, it can be downloaded
+  [here][postgres_download].
+
+## Change sets
+
+Migrations are done with [Liquibase][liquibase_docs] using [SQL
+format][liquibase_sql_format]. The SQL change sets are located in
+`src/main/resources/db/changelog`.
 
 Each change set, to be applied, must be listed in the
 `src/main/resources/db/changelog-main.xml` file inside the
@@ -26,39 +57,23 @@ Example:
 </databaseChangeLog>
 ```
 
-More on this can be found in the documentation [here][5].
-
-## Prerequisites
-
-- Local Liquibase installation. Either download it [here][3], or use package
-  manager, such as Homebrew:
-
-  ```console
-  brew install liquibase
-  ```
-
-- Liquibase added to path to be accessible from anywhere. At the end of
-  Homebrew installation, the following tip is displayed:
-
-  ```console
-  You should set the environment variable LIQUIBASE_HOME to
-    /usr/local/opt/liquibase/libexec
-  ```
-
-  Therefore, do:
-
-  ```console
-  export LIQUIBASE_HOME='/usr/local/opt/liquibase/libexec'
-  ```
-
-- Database driver JAR. For Postgres, it can be downloaded [here][4].
+More information can be found in the documentation
+[here][liquibase_sql_format].
 
 ## Applying migrations
+
+Scripted:
+
+```console
+./bin/apply_migrations.sh
+```
+
+Manually:
 
 ```console
 liquibase \
     --defaultsFile='src/main/resources/liquibase.properties' \
-    --classpath='<absolute_postgres_jar_path>' \
+    --classpath='<db_driver_path>' \
     update
 ```
 
@@ -67,7 +82,7 @@ liquibase \
 ```console
 liquibase \
     --defaultsFile='src/main/resources/liquibase.properties' \
-    --classpath='<absolute_postgres_jar_path>' \
+    --classpath='<db_driver_path>' \
     rollbackCount 1
 ```
 
@@ -91,9 +106,8 @@ implementation "org.liquibase:liquibase-core:4.2.2"
     it's possible to roll back locally. Though, it negates the initial
     migration by Spring, making it redundant in the first place.
 
-[1]: https://docs.liquibase.com
-[2]: https://docs.liquibase.com/concepts/basic/sql-format.html
-[3]: https://www.liquibase.org/download
-[4]: https://jdbc.postgresql.org/download.html
-[5]:
-  https://docs.liquibase.com/workflows/liquibase-community/migrate-with-sql.html
+[liquibase_docs]: https://docs.liquibase.com
+[liquibase_download]: https://www.liquibase.org/download
+[liquibase_sql_format]:
+  https://docs.liquibase.com/concepts/basic/sql-format.html
+[postgres_download]: https://jdbc.postgresql.org/download.html

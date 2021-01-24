@@ -6,24 +6,26 @@
 In this template:
 
 - Spring Boot,
-- PostgreSQL, and
-- Docker.
+- PostgreSQL,
+- Docker + Docker Compose,
+- GitHub workflows:
+  - pure Docker and Docker Compose setups,
+  - unit and integration tests of the Spring Boot application.
 
 This template has been bootstrapped using [this Spring Initializr
-configuration][1].
+configuration][spring_initializr].
 
 ## Setup
 
 ### Migrations
 
-The migrations from `src/main/resources/db/changelog-main.xml` are applied
-automatically by default by Spring Boot under the hood.
+See the [Database Migrations][db_migrations] document.
 
 ### `docker run`
 
 ```console
 ./bin/setup.sh [(--debug|--suspend) --no-cache]
-./bin/start.sh [--detach --dont-stop-db]
+./bin/start.sh [--apply-migrations --detach --dont-stop-db]
 ```
 
 The application is now listening at `http://localhost:8080`. If the `--debug`
@@ -40,6 +42,7 @@ confirmed in the logs.
 
 ```console
 docker-compose --file docker/docker-compose.yml up --build
+./bin/apply_migrations.sh
 ```
 
 The application is now listening at `http://localhost:8080`.
@@ -191,5 +194,6 @@ Click here to expand
 
 </details>
 
-[1]:
+[spring_initializr]:
   https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.2.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql,validation
+[db_migrations]: ./docs/database-migrations.md

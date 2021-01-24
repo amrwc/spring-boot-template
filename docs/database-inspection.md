@@ -16,10 +16,10 @@ describes how to log into and browse a PostgreSQL database.
    1. Name: _write anything_
 1. `Connection` tab
    1. Host name/address: _hostname from `application.yml`_
-   2. Port: `5432`
-   3. Maintenance database: _database name from `application.yml`_
-   4. Username: _username from `application.yml`_
-   5. Password: _password from `application.yml`_
+   1. Port: `5432`
+   1. Maintenance database: _database name from `application.yml`_
+   1. Username: _username from `application.yml`_
+   1. Password: _password from `application.yml`_
 1. Press `Save`. The Postgres server should now be ready for browsing.
 
 Longer explanation of the above steps and configuration can be found [here][1].
