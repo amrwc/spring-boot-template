@@ -61,6 +61,16 @@ jobs:
       - name: Clone the repository
         uses: actions/checkout@v2
 
+      - name: Cache ./tmp/*
+        uses: actions/cache@v2
+        with:
+          path: ./tmp
+          key: ${{ runner.os }}-build-${{ env.TMP_CACHE }}-${{ hashFiles('./tmp/*') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.TMP_CACHE }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
       - name: Add variables
         run: ${{ env.SET_VARIABLES }}
 
@@ -107,6 +117,16 @@ jobs:
     steps:
       - name: Clone the repository
         uses: actions/checkout@v2
+
+      - name: Cache ./tmp/*
+        uses: actions/cache@v2
+        with:
+          path: ./tmp
+          key: ${{ runner.os }}-build-${{ env.TMP_CACHE }}-${{ hashFiles('./tmp/*') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.TMP_CACHE }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Add variables
         run: ${{ env.SET_VARIABLES }}
