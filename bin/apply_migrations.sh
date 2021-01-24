@@ -24,17 +24,19 @@ if [ ! -f "$DRIVER_PATH" ]; then
 fi
 
 liquibase_cmd='liquibase'
-if ! $liquibase_cmd --version >/dev/null && [ ! -f "$LIQUIBASE_PATH" ]; then
-    echo "${PURPLE}Downloading and extracting Liquibase to ${LIQUIBASE_PATH}${NOFORMAT}"
-    mkdir -p "$LIQUIBASE_DIR"
-    curl --silent --location --output "$LIQUIBASE_ARCHIVE" "$LIQUIBASE_URL"
-    sha256="$(sha256sum "$LIQUIBASE_ARCHIVE" | awk '{printf $1}')"
-    if [ "$SHA256_LIQUIBASE_ARCHIVE" != "$sha256" ]; then
-        echo "${RED}SHA256 checksum of '${LIQUIBASE_ARCHIVE}' doesn't match ${SHA256_LIQUIBASE_ARCHIVE}${NOFORMAT}"
-        exit 1
+if ! $liquibase_cmd --version >/dev/null; then
+    if [ ! -f "$LIQUIBASE_PATH" ]; then
+        echo "${PURPLE}Downloading and extracting Liquibase to ${LIQUIBASE_PATH}${NOFORMAT}"
+        mkdir -p "$LIQUIBASE_DIR"
+        curl --silent --location --output "$LIQUIBASE_ARCHIVE" "$LIQUIBASE_URL"
+        sha256="$(sha256sum "$LIQUIBASE_ARCHIVE" | awk '{printf $1}')"
+        if [ "$SHA256_LIQUIBASE_ARCHIVE" != "$sha256" ]; then
+            echo "${RED}SHA256 checksum of '${LIQUIBASE_ARCHIVE}' doesn't match ${SHA256_LIQUIBASE_ARCHIVE}${NOFORMAT}"
+            exit 1
+        fi
+        tar -C "$LIQUIBASE_DIR" -zxf "$LIQUIBASE_ARCHIVE" liquibase.jar
+        rm "$LIQUIBASE_ARCHIVE"
     fi
-    tar -C "$LIQUIBASE_DIR" -zxvf "$LIQUIBASE_ARCHIVE"
-    rm "$LIQUIBASE_ARCHIVE"
     liquibase_cmd="java -jar ${LIQUIBASE_PATH}"
 fi
 
