@@ -18,6 +18,7 @@ env:
   MAIN_IMAGE: 'renameme'
   GRADLE_CONTAINER_ALIAS: 'gradle_container'
   REGISTRY: 'docker.pkg.github.com'
+  TMP_CACHE: 'cache-tmp'
 
   SET_VARIABLES: |
     if [ 'true' = "$USE_CACHE" ]; then

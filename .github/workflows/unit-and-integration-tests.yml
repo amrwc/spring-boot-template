@@ -12,9 +12,9 @@ on:
       - '*.gradle'
 
 env:
-  GRADLE_CACHE: cache-gradle
-  TMP_CACHE: cache-tmp
-  INTEGRATION_TESTS_ENABLED: true
+  INTEGRATION_TESTS_ENABLED: 'true'
+  GRADLE_CACHE: 'cache-gradle'
+  TMP_CACHE: 'cache-tmp'
 
 jobs:
   unit-tests:
