@@ -145,55 +145,59 @@ Places around the project that need renaming.
 Click here to expand
 </summary>
 
-1. `.github/workflows/docker.yml`:
+1. .github/workflows/docker.yml:
    - `MAIN_IMAGE: 'renameme'`
    - `url='http://localhost:8080/api/welcome/1'`
-1. `bin/pgadmin.sh`:
-   - `MAIN_IMAGE='renameme'`
-1. `bin/integration_tests.sh`:
-   - `MAIN_IMAGE='renameme'`
-1. `bin/setup.sh`:
-   - `MAIN_IMAGE='renameme'`
-1. `bin/start.sh`:
-   - `MAIN_IMAGE='renameme'`
-1. `bin/teardown.sh`:
-   - `MAIN_IMAGE='renameme'`
-1. `docker/docker-compose.yml`:
-   - `renameme-network:`
-   - `container_name: renameme-database`
-   - `- renameme-network`
-   - `renameme-service`
-   - `container_name: renameme`
-   - `image: renameme`
-   - `- ${GRADLE_IMAGE:-renameme-gradle_container}`
-   - `- ${MAIN_IMAGE:-renameme}`
-   - `- renameme-database`
-1. `docker/postgres-envars.list`:
-   - `POSTGRES_DB=renameme`
-1. Directory structure:
-   - `src/main/java/me/rename/renameme`
-   - `src/test/java/me/rename/renameme`
-1. `src/main/resources/application.yml`:
-   - `url: 'jdbc:postgresql://renameme-database:5432/renameme'`
-1. `src/main/resources/liquibase.properties`:
-   - `url=jdbc:postgresql://localhost:5432/renameme`
-1. `src/main/resourcees/log4j2.xml`:
-   - `fileName="log/renameme.log"`
-   - `filePattern="log/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
-   - `<IfFileName glob="log/renameme-*.log.gz"/>`
-1. `src/test/resources/application.yml`:
-   - `url: 'jdbc:postgresql://127.0.0.1:5432/renameme'`
-1. `src/test/resources/log4j2.xml`:
-   - `fileName="log/test/renameme.log"`
-   - `filePattern="log/test/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
-   - `<IfFileName glob="log/test/renameme-*.log.gz"/>`
-1. `build.gradle`:
+1. bin/:
+   1. integration_tests.sh:
+      - `MAIN_IMAGE='renameme'`
+   1. pgadmin.sh:
+      - `MAIN_IMAGE='renameme'`
+   1. setup.sh:
+      - `MAIN_IMAGE='renameme'`
+   1. start.sh:
+      - `MAIN_IMAGE='renameme'`
+   1. teardown.sh:
+      - `MAIN_IMAGE='renameme'`
+1. docker/:
+   1. docker-compose.yml:
+      - `renameme-network:`
+      - `container_name: renameme-database`
+      - `- renameme-network`
+      - `renameme-service`
+      - `container_name: renameme`
+      - `image: renameme`
+      - `- ${GRADLE_IMAGE:-renameme-gradle_container}`
+      - `- ${MAIN_IMAGE:-renameme}`
+      - `- renameme-database`
+   1. postgres-envars.list:
+      - `POSTGRES_DB=renameme`
+1. src/:
+   1. Package names:
+      - `src/main/java/me/rename/renameme`
+      - `src/test/java/me/rename/renameme`
+   1. main/resources/:
+      1. application.yml:
+         - `url: 'jdbc:postgresql://renameme-database:5432/renameme'`
+      1. liquibase.properties:
+         - `url=jdbc:postgresql://localhost:5432/renameme`
+      1. log4j2.xml:
+         - `fileName="log/renameme.log"`
+         - `filePattern="log/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
+         - `<IfFileName glob="log/renameme-*.log.gz"/>`
+   1. test/resources/:
+      1. application.yml:
+         - `url: 'jdbc:postgresql://127.0.0.1:5432/renameme'`
+      1. log4j2.xml:
+         - `fileName="log/test/renameme.log"`
+         - `filePattern="log/test/renameme-%d{yyyy-MM-dd}-%i.log.gz"`
+         - `<IfFileName glob="log/test/renameme-*.log.gz"/>`
+1. build.gradle:
    - `group: 'me.rename'`
-1. `settings.gradle`:
+1. settings.gradle:
    - `rootProject.name = 'renameme'`
 
 </details>
 
-[spring_initializr]:
-  https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.2.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql,validation
+[spring_initializr]: https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.2.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql,validation
 [db_migrations]: ./docs/database-migrations.md
