@@ -170,10 +170,12 @@ Click here to expand
       - `- ${GRADLE_IMAGE:-renameme-gradle_container}`
       - `- ${MAIN_IMAGE:-renameme}`
       - `- renameme-database`
+   1. Dockerfile:
+      - `FROM openjdk:11-jre-buster AS renameme`
    1. postgres-envars.list:
       - `POSTGRES_DB=renameme`
 1. src/:
-   1. Package names:
+   1. Package name:
       - `src/main/java/me/rename/renameme`
       - `src/test/java/me/rename/renameme`
    1. main/resources/:
