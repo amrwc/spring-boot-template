@@ -1,7 +1,7 @@
 ##############################################################################
 ############################# Build the project ##############################
 ##############################################################################
-FROM gradle:jdk11 AS gradle_build_container
+FROM gradle:jdk11 AS gradle_container
 
 WORKDIR /home/gradle/project
 COPY build.gradle gradle.properties settings.gradle ./
@@ -24,7 +24,7 @@ RUN addgroup --system spring && adduser --system --no-create-home --ingroup spri
 
 WORKDIR /home/project
 COPY docker/entrypoint.sh entrypoint.sh
-COPY --from=gradle_build_container /home/gradle/project/build/libs/*.jar app.jar
+COPY --from=gradle_container /home/gradle/project/build/libs/*.jar app.jar
 RUN chown spring:spring --recursive .
 RUN chmod 0554 entrypoint.sh
 
