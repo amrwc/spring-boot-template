@@ -1,4 +1,5 @@
 plugins {
+    id 'application'
     id 'org.springframework.boot' version '2.4.2'
     // https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-dependency-management
     // https://docs.gradle.org/4.6/userguide/managing_transitive_dependencies.html#sec:bom_import
@@ -9,6 +10,7 @@ plugins {
 group = 'me.rename'
 version = '0.0.1'
 sourceCompatibility = '11'
+application.mainClassName = 'me.rename.renameme.Application'
 
 configurations {
     compileOnly {

@@ -1,23 +1,17 @@
 ##############################################################################
 ############################# Build the project ##############################
 ##############################################################################
-FROM gradle:jdk11 AS gradle_container
-
-RUN mkdir -p /home/gradle/project/src/main
-COPY build.gradle /home/gradle/project
-COPY settings.gradle /home/gradle/project
-COPY src/main /home/gradle/project/src/main
+FROM gradle:jdk11 AS gradle_build_container
 
 WORKDIR /home/gradle/project
-RUN chown gradle:gradle --recursive .
+COPY build.gradle gradle.properties settings.gradle ./
 
-# Mount the cache from the previous builds. If the cache volume doesn't exist,
-# create it before running `docker build`:
-# docker volume create --name gradle-cache
-VOLUME gradle-cache /home/gradle/.gradle
+ENV GRADLE_USER_CACHE /gradle-cache
+RUN gradle build --no-daemon --stacktrace
 
-USER gradle
-RUN gradle build -x test
+RUN mkdir -p /home/gradle/project/src/main
+COPY src/main /home/gradle/project/src/main
+RUN gradle build --no-daemon --stacktrace --exclude-task test
 
 ##############################################################################
 ############################## Run the project ###############################
@@ -30,7 +24,7 @@ RUN addgroup --system spring && adduser --system --no-create-home --ingroup spri
 
 WORKDIR /home/project
 COPY docker/entrypoint.sh entrypoint.sh
-COPY --from=gradle_container /home/gradle/project/build/libs/*.jar app.jar
+COPY --from=gradle_build_container /home/gradle/project/build/libs/*.jar app.jar
 RUN chown spring:spring --recursive .
 RUN chmod 0554 entrypoint.sh
 
