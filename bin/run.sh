@@ -22,10 +22,21 @@ log() {
     echo "${PURPLE_BOLD}==> ${1} <==${COLOUR_RESET}"
 }
 
+error() {
+    COLOUR_RESET='\033[0m'
+    RED_BOLD='\033[1;31m'
+    echo "${RED_BOLD}==> ${1} <==${COLOUR_RESET}"
+    exit 1
+}
+
 while [ "$#" -gt 0 ]; do
     case $1 in
     --apply-migrations)
         _apply_migrations='true'
+        ;;
+    --cache-from)
+        shift
+        _cache_from="${_cache_from} --cache-from=${1}"
         ;;
     --debug)
         _debug='debug=true'
@@ -33,16 +44,27 @@ while [ "$#" -gt 0 ]; do
     --detach)
         _detach='true'
         ;;
+    --no-cache)
+        _no_cache='--no-cache'
+        ;;
     --suspend)
         _suspend='suspend=true'
         ;;
     *)
-        echo "Unknown option: '${1}'"
-        exit 1
+        error "Unknown option: '${1}'"
         ;;
     esac
     shift
 done
+
+if [ '--no-cache' = "$_no_cache" ]; then
+    _cache_from=''
+fi
+
+interactive='--interactive --tty'
+if [ 'true' = "$_detach" ]; then
+    interactive=''
+fi
 
 ##############################################################################
 ##################### Prepare miscellaneous Docker items #####################
@@ -57,11 +79,12 @@ docker network create --driver bridge "$NETWORK"
 ########################## Build and export the JAR ##########################
 ##############################################################################
 log "Building '${BUILD_IMAGE}' image"
-docker build --tag "$BUILD_IMAGE" --file ./docker/Dockerfile-gradle .
+# shellcheck disable=SC2086
+docker build $_cache_from $_no_cache --tag "$BUILD_IMAGE" --file ./docker/Dockerfile-gradle .
 
 log "Running '${BUILD_IMAGE}' image"
 # shellcheck disable=SC2086
-docker run --interactive --tty \
+docker run $interactive \
     --name "$BUILD_CONTAINER" \
     --volume "${CACHE_VOLUME}:/home/gradle/.gradle" \
     --user gradle \
@@ -71,14 +94,27 @@ docker run --interactive --tty \
 log "Copying JAR from '${BUILD_CONTAINER}'"
 rm -r ./build/libs >/dev/null 2>&1
 mkdir -p ./build/libs
-docker cp "${BUILD_CONTAINER}:/home/gradle/project/build/libs" ./build
+docker cp "${BUILD_CONTAINER}:/home/gradle/project/build/libs" ./build \
+    || error "Failed to copy JAR out ${BUILD_CONTAINER}"
 mv ./build/libs/*.jar ./build/libs/app.jar
 
 ##############################################################################
 ############### Build the main image and create the container ################
 ##############################################################################
+build_args="${_debug} ${_suspend}"
+# shellcheck disable=SC2086,SC2116
+build_args="$(echo $build_args)" # Trim white space
+if [ -n "$build_args" ]; then
+    builder=''
+    for arg in $build_args; do
+        builder="${builder} --build-arg ${arg}"
+    done
+    _build_args="$builder"
+fi
+
 log "Building '${MAIN_IMAGE}' image"
-docker build --tag "$MAIN_IMAGE" --file ./docker/Dockerfile-main .
+# shellcheck disable=SC2086
+docker build $_cache_from $_no_cache --tag "$MAIN_IMAGE" --file ./docker/Dockerfile $_build_args .
 
 log "Creating '${MAIN_CONTAINER}' container"
 publish_main="--publish ${SPRING_PORT}:${SPRING_PORT}"
@@ -86,7 +122,7 @@ if [ 'debug=true' = "$_debug" ] || [ 'suspend=true' = "$_suspend" ]; then
     publish_main="${publish_main} --publish ${DEBUG_PORT}:${DEBUG_PORT}"
 fi
 # shellcheck disable=SC2086
-docker create --interactive --tty \
+docker create $interactive \
     $publish_main \
     --name "$MAIN_CONTAINER" \
     --network="$NETWORK" \
@@ -122,13 +158,3 @@ if [ 'true' = "$_detach" ]; then
 fi
 # shellcheck disable=SC2086
 docker start $attach_interactive "$MAIN_CONTAINER"
-
-##############################################################################
-################### Teardown the build container and image ###################
-##############################################################################
-log "Stopping '${BUILD_CONTAINER}' container"
-docker container stop "$BUILD_CONTAINER"
-log "Removing '${BUILD_CONTAINER}' container"
-docker container rm "$BUILD_CONTAINER"
-log "Removing '${BUILD_IMAGE}' image"
-docker image rm "$BUILD_IMAGE"
