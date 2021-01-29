@@ -131,8 +131,6 @@ Click here to expand
    1. teardown.sh:
       - `MAIN_IMAGE='renameme'`
 1. docker/:
-   1. Dockerfile:
-      - `FROM openjdk:11-jre-buster AS renameme`
    1. postgres-envars.list:
       - `POSTGRES_DB=renameme`
 1. src/:
