@@ -51,7 +51,7 @@ dependencies {
     }
 }
 
-springBoot  {
+springBoot {
     buildInfo()
 }
 
