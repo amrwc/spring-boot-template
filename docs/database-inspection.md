@@ -5,8 +5,11 @@ describes how to log into and browse a PostgreSQL database.
 
 ## pgAdmin
 
+First, make sure that the network and database defined in `./bin/run.sh` are up
+and running. Then run:
+
 ```console
-./bin/setup.sh && ./bin/pgadmin.sh
+./bin/pgadmin.sh
 ```
 
 1. Visit <http://localhost:5050>.
