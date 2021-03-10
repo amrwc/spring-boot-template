@@ -1,3 +1,0 @@
-POSTGRES_DB=renameme
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=password
