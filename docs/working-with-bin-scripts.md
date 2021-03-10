@@ -4,8 +4,8 @@ To work on the Python scripts in `bin/` directory, in IntelliJ IDEA, add import
 the directory as a module.
 
 1. Open Project Structure (`cmd + ;`).
-1. In _Project Settings -> Modules_, choose `ggbot` on the list. Press the `+`
-   button, and choose _Import Module_ from the dropdown.
+1. In _Project Settings -> Modules_, choose the project name from the list.
+   Press the `+` button, and choose _Import Module_ from the dropdown.
 1. Open the `bin/` directory in the file explorer.
 1. In the _Import Module_ modal that comes up, do the following steps:
    1. Choose _Create module from existing sources_, press Next.
