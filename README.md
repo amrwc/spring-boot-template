@@ -123,7 +123,8 @@ Click here to expand
 
 1. .github/workflows/docker.yml:
    - `MAIN_IMAGE: 'renameme'`
-   - `url='http://localhost:8080/api/welcome/1'`
+   - `export POSTGRES_DB='renameme'`
+   - `export SPRING_DATASOURCE_URL='jdbc:postgresql://renameme-database:5432/renameme'`
 1. bin/:
    1. config.ini:
       - `database_container = renameme-database`
