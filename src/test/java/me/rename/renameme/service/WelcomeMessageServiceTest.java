@@ -11,14 +11,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
+import java.util.List;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
-import static org.apache.commons.lang3.RandomUtils.nextLong;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class WelcomeMessageServiceTest {
@@ -34,11 +32,11 @@ class WelcomeMessageServiceTest {
     private ArgumentCaptor<WelcomeMessage> welcomeMessageCaptor;
 
     @Test
-    @DisplayName("Should have found WelcomeMessage by ID")
-    void shouldHaveFoundById() {
-        final var id = nextLong();
-        when(repository.findById(id)).thenReturn(Optional.of(welcomeMessage));
-        assertThat(service.findWelcomeMessageById(id)).isEqualTo(Optional.of(welcomeMessage));
+    @DisplayName("Should have found all WelcomeMessages")
+    void shouldHaveFoundAllWelcomeMessages() {
+        final var welcomeMessages = List.of(welcomeMessage);
+        when(repository.findAll()).thenReturn(welcomeMessages);
+        assertThat(service.findAllWelcomeMessages()).isEqualTo(welcomeMessages);
     }
 
     @Test

@@ -6,10 +6,13 @@ import me.rename.renameme.request.WelcomeMessageRequest;
 import me.rename.renameme.service.WelcomeMessageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * A controller that welcomes the user.
@@ -25,17 +28,11 @@ public class WelcomeController {
         this.service = service;
     }
 
-    /**
-     * Fetches the welcome message with the given ID.
-     * @param id optional ID
-     * @return welcome message with the given ID
-     */
-    @RequestMapping(path = "{id}", method = RequestMethod.GET)
-    public ResponseEntity<WelcomeMessage> welcome(@PathVariable Optional<Long> id) {
-        log.info("Fetching the welcome message with id {}", id);
-        return service.findWelcomeMessageById(id.orElse(1L))
-                .map(welcomeMessage -> new ResponseEntity<>(welcomeMessage, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    /** @return all welcome messages */
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<List<WelcomeMessage>> getAllWelcomeMessages() {
+        log.info("Fetching all welcome messages with");
+        return new ResponseEntity<>(service.findAllWelcomeMessages(), HttpStatus.OK);
     }
 
     /**

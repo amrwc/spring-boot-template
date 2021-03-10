@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.2'
+    id 'org.springframework.boot' version '2.4.3'
     // https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-dependency-management
     // https://docs.gradle.org/4.6/userguide/managing_transitive_dependencies.html#sec:bom_import
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -64,5 +64,12 @@ test {
 task integrationTest(type: Test) {
     useJUnitPlatform {
         includeTags 'integration-test'
+    }
+}
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        // Display `unchecked` warnings
+        options.compilerArgs << '-Xlint:unchecked'
     }
 }
