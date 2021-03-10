@@ -3,7 +3,6 @@ package me.rename.renameme.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.rename.renameme.TestType;
 import me.rename.renameme.request.WelcomeMessageRequest;
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -29,19 +28,11 @@ public class WelcomeControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("Should not have welcomed when the WelcomeMessage has not been found")
-    void shouldNotHaveWelcomed() throws Exception {
-        final var id = RandomUtils.nextInt(2, Integer.MAX_VALUE);
-        mockMvc.perform(get("/api/welcome/{id}", id))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @DisplayName("Should have welcomed when the WelcomeMessage has been found")
-    void shouldHaveWelcomed() throws Exception {
-        mockMvc.perform(get("/api/welcome/{id}", 1))
+    @DisplayName("Should have got all WelcomeMessages")
+    void shouldHaveGotAllWelcomeMessages() throws Exception {
+        mockMvc.perform(get("/api/welcome"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$[0]['id']").isNotEmpty());
     }
 
     @Test

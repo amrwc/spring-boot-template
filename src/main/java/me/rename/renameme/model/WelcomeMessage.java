@@ -5,24 +5,21 @@ import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.UUID;
 
+@Data
 @Entity
-@Getter
-@Setter
 @Immutable
-@EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "WELCOME_MESSAGES")
-@SequenceGenerator(name = "seq", sequenceName = "WELCOME_MESSAGES_SEQ", allocationSize = 1)
 public class WelcomeMessage {
 
     @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
-    private Long id;
+    @GeneratedValue
+    @Column(name = "ID", unique = true, nullable = false, insertable = false, updatable = false)
+    private UUID id;
 
-    @Column(name = "CONTENT", length = 64)
+    @Column(name = "CONTENT", length = 64, nullable = false, updatable = false)
     @NotBlank(message = "Welcome message content cannot be blank")
     private String content;
 

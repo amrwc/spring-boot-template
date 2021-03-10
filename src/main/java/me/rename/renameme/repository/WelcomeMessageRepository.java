@@ -5,11 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.UUID;
 
 /**
  * Repository for the welcome messages.
  */
 @Repository
 @Transactional
-public interface WelcomeMessageRepository extends JpaRepository<WelcomeMessage, Long> {
+public interface WelcomeMessageRepository extends JpaRepository<WelcomeMessage, UUID> {
 }

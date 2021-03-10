@@ -74,19 +74,15 @@ ALTER USER spring_user WITH PASSWORD '<new_password>';
 
 ### `/api/welcome`
 
-#### GET `[/<id>]`
+#### GET
 
-Returns a welcome message with the given ID.
-
-Path variables:
-
-- `id` – primary key of the `WELCOME_MESSAGES` table. Default: `1`
+Returns all welcome messages.
 
 ##### Example
 
 ```console
-# {"id":2,"content":"Foo"}
-curl http://localhost:8080/api/welcome/2
+# {"id":"c3f7bfa4-fac9-46bd-b139-866e34b1f83f","content":"Foo"}
+curl http://localhost:8080/api/welcome
 ```
 
 #### POST

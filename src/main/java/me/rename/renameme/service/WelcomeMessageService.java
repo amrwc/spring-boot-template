@@ -5,7 +5,7 @@ import me.rename.renameme.repository.WelcomeMessageRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class WelcomeMessageService {
@@ -16,8 +16,8 @@ public class WelcomeMessageService {
         this.repository = repository;
     }
 
-    public Optional<WelcomeMessage> findWelcomeMessageById(final Long id) {
-        return repository.findById(id);
+    public List<WelcomeMessage> findAllWelcomeMessages() {
+        return repository.findAll();
     }
 
     @Transactional
