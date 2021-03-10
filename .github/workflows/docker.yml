@@ -4,12 +4,9 @@ on:
   push:
     paths:
       - '.github/workflows/docker.yml'
-      - 'bin/apply_migrations.sh'
-      - 'bin/database.sh'
-      - 'bin/run.sh'
-      - 'bin/teardown.sh'
-      - 'bin/test_api.sh'
+      - 'bin/**'
       - 'docker/**'
+      - 'gradle/**'
       - 'src/main/**.java'
       - 'src/main/resources/**'
       - 'build.gradle'
@@ -19,15 +16,15 @@ on:
 env:
   USE_CACHE: 'true'
   MAIN_IMAGE: 'renameme'
-  REGISTRY: 'docker.pkg.github.com'
+  REGISTRY: 'ghcr.io'
   TMP_CACHE: 'cache-tmp'
 
   SET_VARIABLES: |
     if [ 'true' = "$USE_CACHE" ]; then
       build_image="${MAIN_IMAGE}-gradle-build"
       echo "BUILD_IMAGE=${build_image}" >> $GITHUB_ENV
-      echo "BUILD_CONTAINER_CACHE=${REGISTRY}/${GITHUB_REPOSITORY}/${build_image}" >> $GITHUB_ENV
-      echo "MAIN_CONTAINER_CACHE=${REGISTRY}/${GITHUB_REPOSITORY}/${MAIN_IMAGE}" >> $GITHUB_ENV
+      echo "BUILD_CONTAINER_CACHE=${REGISTRY}/${GITHUB_ACTOR}/${build_image}" >> $GITHUB_ENV
+      echo "MAIN_CONTAINER_CACHE=${REGISTRY}/${GITHUB_ACTOR}/${MAIN_IMAGE}" >> $GITHUB_ENV
     fi
 
 jobs:
@@ -48,12 +45,18 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - name: Add variables
+      - name: Install Python requirements
+        run: |
+          sudo python3 -m pip install -U pip
+          sudo python3 -m pip install -U setuptools
+          pip3 install -r ./bin/requirements.txt
+
+      - name: Set variables
         run: ${{ env.SET_VARIABLES }}
 
       - name: Log into the Docker registry
         if: ${{ 'true' == env.USE_CACHE }}
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login "$REGISTRY" --username "$GITHUB_ACTOR" --password-stdin
+        run: echo "${{ secrets.CR_PAT }}" | docker login "$REGISTRY" --username "$GITHUB_ACTOR" --password-stdin
 
       - name: Pull cached images
         if: ${{ 'true' == env.USE_CACHE }}
@@ -66,8 +69,19 @@ jobs:
           if [ 'true' = "$USE_CACHE" ]; then
             cache_from="--cache-from ${BUILD_CONTAINER_CACHE} --cache-from ${MAIN_CONTAINER_CACHE}"
           fi
+
+          # Set required envars
+          export POSTGRES_URL='jdbc:postgresql://localhost:5432'
+          export POSTGRES_DB='renameme'
+          export POSTGRES_USER='postgres'
+          export POSTGRES_PASSWORD="$(xxd -l 16 -c 16 -p < /dev/random)"
+
+          export SPRING_DATASOURCE_URL='jdbc:postgresql://renameme-database:5432/renameme'
+          export SPRING_DATASOURCE_USERNAME='spring_user'
+          export SPRING_DATASOURCE_PASSWORD='SpringUserPassword'
+
           # shellcheck disable=SC2086
-          ./bin/run.sh --apply-migrations --detach $cache_from
+          ./bin/run.py --apply-migrations --detach $cache_from
 
       - name: Tag and push the images
         if: ${{ 'true' == env.USE_CACHE }}
@@ -86,7 +100,7 @@ jobs:
       - name: Test the API
         run: |
           sleep 15 # Wait for Tomcat to come up
-          ./bin/test_api.sh
+          ./bin/api_tests.py
 
       - name: Teardown
-        run: ./bin/teardown.sh --include-db
+        run: ./bin/teardown.py --db --network
