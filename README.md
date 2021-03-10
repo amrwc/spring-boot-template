@@ -17,11 +17,19 @@ configuration][spring_initializr].
 
 ## Documentation
 
+- [Architecture](./docs/architecture.md)
 - [Database Inspection](./docs/database-inspection.md)
 - [Database Migrations](./docs/database-migrations.md)
+- [Design Decisions](./docs/design-decisions.md)
 - [Working with `bin` Scripts](./docs/working-with-bin-scripts.md)
 
 ## Setup
+
+### GitHub Workflows
+
+Add `CR_PAT` secret to the repository to be able to sign into container
+registry. Read more on this in [GitHub's
+documentation][github_auth_container_registry].
 
 ### Docker
 
@@ -152,3 +160,5 @@ Click here to expand
 
 [spring_initializr]:
   https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.2.RELEASE&packaging=jar&jvmVersion=11&groupId=me.rename&artifactId=renameme&name=renameme&description=&packageName=me.rename.renameme&dependencies=devtools,lombok,web,data-jpa,liquibase,postgresql,validation
+[github_auth_container_registry]:
+  https://docs.github.com/en/packages/guides/migrating-to-github-container-registry-for-docker-images#authenticating-with-the-container-registry
